@@ -1,3 +1,5 @@
+.virtual_documents/
+.virtual_documents/*
 *.wav
 # os junk
 .DS_Store
