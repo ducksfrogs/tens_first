@@ -6,12 +6,24 @@ import matplotlib.pyplot as plt
 
 print(tf.__version__)
 
+
+
+
 fashion_mnist = keras.datasets.fashion_mnist
 
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
+
 class_names = ['T-shirt/top','Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal',
                'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+
+
+
+train_images.shape
+
+
+train_labels
 
 
 plt.figure()
@@ -19,6 +31,8 @@ plt.imshow(test_images[0])
 plt.colorbar()
 plt.grid(False)
 plt.show()
+
+
 
 train_images = train_images / 255.0
 test_images = test_images / 255.0
@@ -33,6 +47,8 @@ for i in range(25):
     plt.imshow(train_images[i], cmap=plt.cm.binary)
     plt.xlabel(class_names[train_labels[i]])
 plt.show()
+    
+
 
 
 model = keras.Sequential([
@@ -44,11 +60,27 @@ model = keras.Sequential([
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',metrics=['accuracy'])
 
+
+
 model.fit(train_images, train_labels, epochs=5)
+
+
 
 test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
 
+
+
 predictions = model.predict(test_images)
+
+
+
+predictions[0]
+
+
+np.argmax(predictions[0])
+
+
+test_labels[0]
 
 
 def plot_image(i, predictions_array, true_label, img):
@@ -66,8 +98,8 @@ def plot_image(i, predictions_array, true_label, img):
         color = 'red'
 
     plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                        100*np.max(predictions_array),
-                                        class_names[true_label]), color=color)
+                                        100*np.max(predictions_array), 
+                                        class_names[true_label]), color=color)  
 
 
 def plot_value_array(i, predictions_array, true_label):
@@ -75,12 +107,13 @@ def plot_value_array(i, predictions_array, true_label):
     plt.grid(False)
     plt.xticks([])
     plt.yticks([])
-    thisplot = plt.bar(range(10), predictions_array, color='#77777')
+    thisplot = plt.bar(range(10), predictions_array, color='#777777')
     plt.ylim([0,1])
     predicted_label = np.argmax(predictions_array)
 
     thisplot[predicted_label].set_color('red')
     thisplot[true_label].set_color('blue')
+
 
 
 i = 0
@@ -92,4 +125,39 @@ plot_value_array(i, predictions, test_labels)
 plt.show()
 
 
-plot_value_array(0, prediction_sigle, test_labels)
+
+i = 12
+plt.figure(figsize=(6,3))
+plt.subplot(1,2,1)
+plot_image(i, predictions, test_labels, test_images)
+plt.subplot(1,2,2)
+plot_value_array(i, predictions, test_labels)
+plt.show()
+
+
+
+img = test_images[0]
+
+print(img.shape)
+
+
+img = (np.expand_dims(img, 0))
+
+
+print(img.shape)
+
+
+prediction_single = model.predict(img)
+
+
+prediction_single
+
+
+np.argmax(prediction_single)
+
+
+plot_value_array(0, prediction_single, test_labels)
+_ = plt.xticks(range(10), class_names, rotation=45)
+
+
+
