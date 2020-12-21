@@ -1,6 +1,9 @@
 .virtual_documents/
+__MACOSX/
+__MACOSX/*
 .virtual_documents/*
 *.wav
+*.zip
 # os junk
 .DS_Store
 
