@@ -100,3 +100,20 @@ print('Waveform shape:', waveform.shape)
 print("Spectrogram shape:", spectrogram.shape)
 print("Audio playback")
 display.display(display.Audio(waveform, rate=1600))
+
+
+def plot_spectrogram(spectrogram, ax):
+    log_spec = np.log(spectrogram.T)
+    height = log_spec.shape[0]
+    X = np.arange(16000, step=height + 1)
+    Y = range(height)
+    ax.pcolormesh(X, Y, log_spec)
+
+fig, axes = plt.subplots(2, figsize=(12,8))
+timescale = np.arange(waveform.shape[0])
+axes[0].plot(timescale, waveform.numpy())
+axes[0].set_title('Waveform')
+axes[0].set_xlim([0,16000])
+plot_spectrogram(spectrogram.numpy(), axes[1])
+axes[1].set_title("Spectrogram")
+plt.show()
