@@ -6,7 +6,7 @@ __MACOSX/*
 *.zip
 # os junk
 .DS_Store
-
+data/
 # yarn/typescript build junk
 package-lock.json
 *.tsbuildinfo
