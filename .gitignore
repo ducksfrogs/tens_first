@@ -120,7 +120,7 @@ node_modules/
 # jetbrains ide stuff
 *.iml
 .idea/
-
+data/
 # vscode ide stuff
 *.code-workspace
 .history
