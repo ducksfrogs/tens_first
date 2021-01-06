@@ -1,6 +1,12 @@
+.virtual_documents/
+__MACOSX/
+__MACOSX/*
+.virtual_documents/*
+*.wav
+*.zip
 # os junk
 .DS_Store
-
+data/
 # yarn/typescript build junk
 package-lock.json
 *.tsbuildinfo
@@ -114,7 +120,7 @@ node_modules/
 # jetbrains ide stuff
 *.iml
 .idea/
-
+data/
 # vscode ide stuff
 *.code-workspace
 .history
