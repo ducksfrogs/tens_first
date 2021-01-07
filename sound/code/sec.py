@@ -37,3 +37,51 @@ def decode_audio(audio_binary):
 def get_label(file_path):
     parts = tf.string.split(file_path, os.path.sep)
     return parts[-2]
+
+def get_waveform_and_label(file_path):
+    label = get_label(file_path)
+    audio_binary = tf.io.read_file(file_path)
+    waveform = decode_audio(audio_binary)
+    return waveform, label
+
+
+AUTOTUNE = tf.data.experimental.AUTOTUNE
+files_ds = tf.data.Dataset.from_tensor_slices(train_files)
+waveform_ds = files_ds.map(get_waveform_and_label, num_parallel_calls=AUTOTUNE)
+
+rows = 3
+cols = 3
+n = rows * cols
+
+fig, axes = plt.subplots(rows, cols, figsize=(10, 12))
+for i, (audio, label) in enumerate(waveform_ds.take(n)):
+    r = i // cols
+    c = i % cols
+    ax = axes[r][c]
+
+    ax.plot(audio.numpy())
+    ax.set_yticks(np.arange(-1.2, 1.2, 0.2))
+    label = label.numpy().decode('utf-8')
+    ax.set_title(label)
+
+plt.show()
+
+
+def get_spectrogram(waveform):
+    zero_padding = tf.zeros([16000] - tf.shape(waveform),dtype=tf.float32)
+    waveform = tf.cast(waveform, tf.float32)
+    equal_length = tf.concat([waveform, zero_padding], 0)
+    spectrogram = tf.signal.stft(
+        equal_length, frame_length=255, frame_step=128 )
+    spectrogram = tf.abs(spectrogram)
+
+    return spectrogram
+
+for waveform, label in waveform_ds.take(1):
+    label = label.numpy().decode('utf-8')
+    spectrogram = get_spectrogram(waveform)
+
+print("Label:", label)
+print("Waveform shape:", spectrogram.shape)
+
+    
