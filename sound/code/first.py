@@ -142,3 +142,16 @@ for i, (spectrogram, label_id) in enumerate(spectrogram_ds.take(n)):
     ax.set_title(commands[label_id.numpy()])
     ax.axis('off')
 plt.show()
+
+
+def preprocessing_dataset(files):
+    files_ds = tf.data.Dataset.from_tensor_slices(files)
+    output_ds = files_ds.map(get_waveform_and_label, num_parallel_calls=AUTOTUNE)
+    output_ds = output_ds.map(
+        get_spectrogram_and_label_id, num_parallel_calls=AUTOTUNE
+    )
+    return output_ds
+
+train_ds = spectrogram_ds
+val_ds = preprocessing_dataset(val_files)
+test_ds = preprocessing_dataset(test_files)
