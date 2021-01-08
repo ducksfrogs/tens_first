@@ -84,4 +84,35 @@ for waveform, label in waveform_ds.take(1):
 print("Label:", label)
 print("Waveform shape:", spectrogram.shape)
 
-    
+
+def plot_spectrogram(spectrogram, ax):
+    log_spec = np.log(spectrogram.T)
+    height - log_spec.shape[0]
+    X = np.arange(16000, step=height+1)
+    Y = range(height)
+    ax.pcolormesh(X, Y, log_spec)
+
+fig, axes = plt.subplots(2, figsize=(12,8))
+timescale = np.arange(waveform.shape[0])
+axes[0].plot(timescale, waveform.numpy())
+axes[0].set_title('Waveform')
+axes[0].set_xlim([0,16000])
+plot_spectrogram(spectrogram.numpy(), axes[1])
+axes[1].set_title("Spectrogram")
+plt.show()
+
+
+def get_spectrogram_and_label_id(audio, label):
+    spectrogram = get_spectrogram(audio)
+    spectrogram = tf.expand_dims(spectrogram, -1)
+    label_id = tf.argmax(label == commands)
+    return spectrogram, label_id
+
+
+spectrogram_ds = waveform_ds.map(get_spectrogram_and_label_id, num_parallel_calls=AUTOTUNE)
+
+
+def preprocessing_dataset(files):
+    files_ds = tf.data.Dataset.from_tensor_slices(files)
+    output_ds = files_ds.map(get_waveform_and_label, num_parallel_calls=AUTOTUNE)
+    output_ds = output_ds.map(get_spectrogram_and_label_id, num_parallel_calls=AUTOTUNE)
