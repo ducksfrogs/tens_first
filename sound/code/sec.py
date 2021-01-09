@@ -116,3 +116,16 @@ def preprocessing_dataset(files):
     files_ds = tf.data.Dataset.from_tensor_slices(files)
     output_ds = files_ds.map(get_waveform_and_label, num_parallel_calls=AUTOTUNE)
     output_ds = output_ds.map(get_spectrogram_and_label_id, num_parallel_calls=AUTOTUNE)
+    return output_ds
+
+
+batch_size = 64
+train_ds = train_ds.batch(batch_size)
+val_ds = val_ds.batch(batch_size)
+
+train_ds =train_ds.cache().prefetch(AUTOTUNE)
+val_ds = val_ds.cache().prefetch(AUTOTUNE)
+
+
+for spectrogram, _ in spectrogram_ds.take(1):
+    input_shape = spectrogram.shape
