@@ -155,3 +155,6 @@ def preprocessing_dataset(files):
 train_ds = spectrogram_ds
 val_ds = preprocessing_dataset(val_files)
 test_ds = preprocessing_dataset(test_files)
+
+train_ds = train_ds.cache().prefetch(AUTOTUNE)
+val_ds = val_ds.cache().prefetch()
