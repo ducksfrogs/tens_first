@@ -107,3 +107,16 @@ label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(all_image_labels, tf.int64
 
 for label in label_ds.take(10):
     print(label_names[label.numpy()])
+
+
+image_label_ds = tf.data.Dataset.zip((image_ds, label_ds))
+
+print(image_label_ds)
+
+ds = tf.data.Dataset.from_tensor_slices((all_image_paths, all_image_labels))
+
+def load_and_preprocess_from_path_label(path, label):
+    return load_and_preprocess_image(path), label
+
+image_label_ds = ds.map(load_and_preprocess_from_path_label)
+image_label_ds
