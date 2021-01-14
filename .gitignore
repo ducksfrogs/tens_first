@@ -130,3 +130,4 @@ data/
 *.swp
 .devcontainer/
 src/version.ts
+input/
