@@ -48,3 +48,28 @@ history = model.fit(partial_X_train,
                     partial_y_train, epochs=20,
                     batch_size=512,
                     validation_data=(x_val, y_val))
+
+import matplotlib.pyplot as plt
+
+history_dict = history.history
+loss_val = history_dict['loss']
+val_loss_values = history_dict['val_loss']
+
+epochs = range(1, len(loss_val) + 1)
+
+plt.plot(epochs, loss_val, 'bo', label='Training loss')
+plt.plot(epochs, val_loss_values, 'b', label='Validation loss')
+plt.xlabel('Epochs')
+plt.title("Training and validation  loss")
+plt.ylabel('loss')
+plt.legend()
+
+
+acc = history_dict['acc']
+val_acc = history_dict['val_acc']
+
+plt.plot(epochs, acc, 'bo', label='Training acc')
+plt.plot(epochs, val_acc, 'b', label='Validation acc')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
