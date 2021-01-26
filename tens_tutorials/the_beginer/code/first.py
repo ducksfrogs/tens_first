@@ -55,7 +55,7 @@ test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
 
 predictions = model.predict(test_images)
 
-def plot_image(i, predictions_array, ture_label, img):
+def plot_image(i, predictions_array, true_label, img):
     predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
     plt.grid(False)
     plt.xticks([])
