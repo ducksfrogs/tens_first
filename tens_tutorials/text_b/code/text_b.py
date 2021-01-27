@@ -11,3 +11,5 @@ imdb = keras.datasets.imdb
 print("Training entries: {}, labels: {}".format(len(train_data), len(train_labels)))
 
 word_index = imdb.get_word_index()
+
+word_index = {k:(v+3) for k,v in word_index.items()}
