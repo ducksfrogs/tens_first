@@ -21,3 +21,22 @@ image_count = len(all_image_paths)
 image_count
 
 all_image_paths[:10]
+
+import os
+attributions = (data_root/"LICENSE.txt").open(encoding='utf-8').readlines()[4:]
+attributions = [line.split(' CC-BY') for line in attributions]
+attributions = dict(attributions)
+
+import IPython.display as display
+
+def caption_image(image_path):
+    image_rel = pathlib.Path(image_path).relative_to(data_root)
+    return "Image (CC BY 2.0)" + ' - '.join(attributions[str(image_rel)].split(' - ')[:-1])
+
+for n in range(3):
+    image_path = random.choice(all_image_paths)
+    display.display(display.Image(image_path))
+    print(caption_image(image_path))
+    print()
+
+label_names = sorted(item.name for item in data_root.glob('*/') if item.is_dir())
