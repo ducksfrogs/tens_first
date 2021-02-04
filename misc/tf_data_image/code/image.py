@@ -96,3 +96,35 @@ for n, image in enumerate(image_ds.take(4)):
     plt.yticks([])
     plt.xlabel(caption_image(all_image_paths[n]))
     plt.show()
+
+
+label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(all_image_labels, tf.int64))
+
+for labels in label_ds.take(10):
+    print(label_names[label.numpy()])
+
+
+image_label_ds = tf.data.Dataset.zip((image_ds, label_ds))
+print(image_label_ds)
+
+ds = tf.data.Dataset.from_tensor_slices((all_image_paths, all_image_labels))
+
+def load_and_preprocess_from_path_label(path, label):
+    return load_and_preprocess_image(path), label
+
+image_label_ds = ds.map(load_and_preprocess_from_path_label)
+image_label_ds
+
+BATCH_SIZE = 32
+
+ds = image_label_ds.shuffle(buffer_size=image_count)
+ds = ds.repeat()
+ds = ds.batch(BATCH_SIZE)
+ds = ds.prefetch(buffer_size=AUTOTUNE)
+ds
+
+ds = image_label_ds.apply(
+    tf.data.experimental.shuffle_and_repeat(buffer_size=(image_count))
+ds = ds.batch(BATCH_SIZE)
+ds = ds.prefetch(buffer_size=AUTOTUNE)
+ds
