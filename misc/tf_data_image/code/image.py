@@ -141,3 +141,21 @@ keras_ds = ds.map(change_range)
 
 image_batch, label_batch = next(iter(keras_ds))
 feature_map_batch = mobile_net(image)
+
+model = tf.keras.Sequential([
+    mobile_net,
+    tf.keras.layers.GlobalAveragePooling2D(), tf.keras.layers.Dense(len(label_names))
+])
+
+logit_batch = model(image_batch).numpy()
+print("min logit:", logit_batch.min())
+print("max logit:", logit_batch.max())
+
+print()
+print("Shape:", logit_batch.shape)
+
+model.compile(optimizer=keras.optimizers.Adam(),loss='spase_categorical_crossentropy',metrics=['accuracy'])
+
+steps_per_epoch = tf.math.ceil(len(all_image_paths)/BATCH_SIZE).numpy()
+
+model.fit(ds, epochs=1, steps_per_epoch=3)
