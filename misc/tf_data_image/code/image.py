@@ -159,3 +159,47 @@ model.compile(optimizer=keras.optimizers.Adam(),loss='spase_categorical_crossent
 steps_per_epoch = tf.math.ceil(len(all_image_paths)/BATCH_SIZE).numpy()
 
 model.fit(ds, epochs=1, steps_per_epoch=3)
+
+
+import time
+
+default_timeid_steps = 2*steps_per_epoch + 1
+
+def timeit(ds, steps=default_timeid_steps):
+        overall_start = time.time()
+        it = iter(ds.take(steps+1))
+
+        next(it)
+
+        start = time.time()
+        for i, (images, labels) in enumerate(it):
+                if i % 10 == 0:
+                        print('.', end='')
+        print()
+        end = time.time()
+
+        duration = end - start
+        print("{} batches: {} s".format(steps, duration))
+        print("{:0.5f} Images/s".format(BATCH_SIZE*steps/duration))
+        print("Total time: {}s".format(end-overall_start))
+
+ds = image_label_ds.apply(
+    tf.data.experimental.shuffle_and_repeat(buffer_size=image_count)
+)
+ds = ds.batch(BATCH_SIZE).prefetch(buffer_size=AUTOTUNE)
+
+timeit(ds)
+
+ds = image_label_ds.cache()
+ds = ds.apply(
+    tf.data.experimental.shuffle_and_repeat(buffer_size=image_count))
+
+ds = ds.batch(BATCH_SIZE).prefetch(buffer_size=AUTOTUNE)
+
+
+ds = image_label_ds.cache(filename="./cache.tf-data")
+ds = ds.apply(
+    tf.data.experimental.shuffle_and_repeat(buffer_size=image_count))
+
+ds = ds.batch(BATCH_SIZE).prefetch(1)
+ds
