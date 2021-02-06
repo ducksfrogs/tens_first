@@ -39,3 +39,13 @@ sns.pairplot(train_dataset[["MPG","Cylynders", "Displacement", "Weight"]], diag_
 train_stats = train_dataset.describe()
 train_stats.pop("MPG")
 train_stats = train_stats.transpose()
+
+train_labels = train_dataset.pop("MPG")
+test_labels = test_dataset.pop("MPG")
+
+
+def norm(x):
+    return (x - train_stats['mean'])/ train_stats['std']
+
+normed_train_data = norm(train_dataset)
+normed_test_data = norm(test_dataset)
