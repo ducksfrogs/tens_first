@@ -49,3 +49,34 @@ def norm(x):
 
 normed_train_data = norm(train_dataset)
 normed_test_data = norm(test_dataset)
+
+def build_model():
+    model = keras.Sequential([
+        layers.Dense(64, activation='relu', input_shape=[len(train_dataset.keys())]),
+        layers.Dense(64, activation='relu'),
+        layers.Dense(1)
+    ])
+
+    optimizer = tf.keras.optimizers.RMSprop(0.001)
+
+    model.compile(loss='mse', optimizer=optimizer, metrics=['mae', 'mse''])
+    return model
+
+model = build_model()
+
+model.summary()
+
+example_batch = normed_train_data[:10]
+example_result = model.predict(example_batch)
+
+class PritDot(keras.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs):
+        if epoch % 100 == 0: print(' ')
+        print('.', end=' ')
+
+EPOCHS = 1000
+
+history = model.fit(
+    normed_train_data, train_labels,
+    epochs= EPOCHS, validation_spllit =0.2, verbose=0, callbacks=[PrintDot()]
+)
