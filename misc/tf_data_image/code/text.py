@@ -1,6 +1,3 @@
-pip install -q tf-nightly
-
-
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
@@ -23,7 +20,7 @@ labeled_data_sets = []
 
 for i, filename in enumerate(FILE_NAMES):
     lines_dataset = tf.data.TextLineDataset(os.path.join(parent_dir, file_name))
-    labeled_datasets = lines_dataset.map(lambda ex: labeler(ex, i))    
+    labeled_datasets = lines_dataset.map(lambda ex: labeler(ex, i))
     labeled_data_sets.append(labeled_datasets)
 
 BUFFER_SIZE = 50000
