@@ -202,4 +202,9 @@ ds = ds.apply(
     tf.data.experimental.shuffle_and_repeat(buffer_size=image_count))
 
 ds = ds.batch(BATCH_SIZE).prefetch(1)
-ds
+
+image_ds = tf.data.Dataset.from_tensor_slices(all_image_paths).map(tf.io.read_file)
+tfrec = tr.data.experimental.TFRecordWriter('images.tfrec')
+tfrec.write(image_ds)
+
+image_ds = tf.data.TFRecordDataset
