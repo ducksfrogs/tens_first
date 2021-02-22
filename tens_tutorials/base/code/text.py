@@ -26,4 +26,17 @@ reverve_word_index = dict([(value, key) for (key, value) in word_index.items()])
 def decode_review(text):
     return ' '.join([reverve_word_index.get(i, '?') for i in text])
 
-    
+
+train_data = keras.preprocessing.sequence.parse_sequences(train_data,
+                                                        value=word_index['<PAD>'],
+                                                        padding='post',
+                                                        maxlen=256)
+
+test_data = keras.preprocessing.sequence.pad_sequences(test_data,
+                                                        value=word_index["<PAD>"],
+                                                        padding='post',
+                                                        maxlen=256)
+
+
+len(train_data[0])
+len(train_data[1])
