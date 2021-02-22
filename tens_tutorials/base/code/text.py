@@ -53,3 +53,43 @@ model.summary()
 
 
 model.compile(optimiser='adam',loss='binary_crossentropy',metrics=['accuracy'])
+
+x_val = train_data[:10000]
+parital_x_train = train_data[10000:]
+
+y_val = train_labels[:10000]
+parital_y_train = train_labels[10000:]
+
+history = model.fit(parital_x_train,
+                    parital_y_train, epochs=40, batch_size=512,
+                    validation_data=(x_val, y_val),verbose=1)
+
+results = model.evaluate(test_data, test_labels, verbose=2)
+
+history_dict = history.history
+
+dict_keys(['loss', 'accuracy', 'val_loss', 'val_accuracy'])
+
+history_dict.keys()
+
+import matplotlib.pyplot as plt
+
+acc = history_dict['accuracy']
+val_acc = history_dict['val_accuracy']
+loss = history_dict['loss']
+val_loss = history_dict['val_loss']
+
+plt.plot(epochs, loss, 'bo', label="Training loss")
+plt.plot(epochs, val_loss, 'b', label="Validation loss")
+plt.title("Training and validation loss")
+plt.xlabel("Epochs")
+plt.ylabel('Loss')
+plt.legend()
+
+plt.clf()
+
+plt.plot(epochs, acc, 'bo', label="Training acc")
+plt.plot(epochs, val_acc, 'b', label='Validation acc')
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
