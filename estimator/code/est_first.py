@@ -24,3 +24,51 @@ def input_evaluation_set():
                 'PetalWidth': np.array([2.2, 1.0])}
     labels = np.array([2,1])
     return features, labels
+
+
+def input_fn(features, labels, training=True, batch_size=256):
+    dataset = tf.data.Dataset.from_tensor_slices((dict(features), labels))
+
+    if training:
+        dataset = dataset.shuffle(1000).repeat()
+
+        return dataset.batch(batch_size)
+
+
+my_feature_columns = []
+for key in train.keys():
+    my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+
+
+classfier = tf.estimator.DNNClassfier(
+    feature_columns = my_feature_columns,
+    hidden_units = [30, 10], batch_size,
+    n_classes=3
+)
+classfier.train(
+    input_fn = lambda: input_fn(train, train_y, training=True),
+    steps=5000
+)
+
+eval_result = classfier.evaluate(
+    input_fn = lambda: input_fn(test, test_y, training=False)
+)
+
+print("\nTest set accuracy: {accuracy:0.3f}\n".format(**eval_result))
+
+
+expected = ['Setosa', 'Versicolor', 'Virginica']
+
+predict_x = {
+    'SepalLength':[5.1, 5.9, 6.9],
+    'SepalWidth': [3.3, 3.0, 3.1],
+    'PetalLength': [1.7, 1.5, 2.1],
+    'PetalWidth': [0.5, 1.5, 2.1]
+}
+
+def input_fn(features, batch_size=256):
+    return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
+
+predictions = classfier.predict(
+    input_fn = lambda: input_fn(predict_x)
+)
